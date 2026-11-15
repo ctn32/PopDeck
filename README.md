@@ -43,10 +43,11 @@ PopDeck runs a tiny HTTP server on your PC. Your phone opens its page over the l
 or downloads the same file and plays it locally with its sound. The server is LAN-only and PIN-protected.
 If the phone can't connect, allow the port in Windows Firewall (the app offers to do it, or run `windows/open_firewall.bat` as administrator).
 
-## Tests (Linux, optional)
-The portable core (GIF decoder, QR encoder, JSON, web API) builds and runs on Linux:
 ## Personal Note
 This app is vibe-coded because i needed something like streamdeck and no other app was working for me or met my needs as a free deck-app for my streaming sessions so i build my own i hope you guys will use it too.
+
+## Tests (Linux, optional)
+The portable core (GIF decoder, QR encoder, JSON, web API) builds and runs on Linux:
 ```sh
 cd windows
 g++ -std=c++17 -O1 -pthread tests/test_web.cpp src/util.cpp src/gif.cpp src/scale.cpp src/keys.cpp src/image.cpp \
