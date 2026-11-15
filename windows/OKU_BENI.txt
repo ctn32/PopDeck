@@ -1,0 +1,227 @@
+POPDECK  (C++ surumu)
+==============================
+
+Bu klasor PopDeck'in TAMAMEN C++ ile yeniden yazilmis surumudur (Python/Tkinter gerekmez).
+Ayar dosyalari (main/ayarlar.json, main/deck.json), diller/*.json ve "main" klasoru
+Python surumuyle AYNI bicimdedir; eski klasorlerini oldugu gibi kullanabilirsin.
+
+1) DERLEME (bir kere; sonunda tek dosya: PopDeck.exe)
+   Secenek A - MinGW-w64 (ucretsiz, kucuk):
+     - https://www.msys2.org adresinden MSYS2 kur, "MSYS2 MINGW64" kabugunda:
+         pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make
+     - C:\msys64\mingw64\bin klasorunu PATH'e ekle, sonra "derle_mingw.bat" dosyasina cift tikla.
+   Secenek B - Visual Studio 2019/2022 ("C++ ile masaustu gelistirme" yuklu):
+     - "derle_msvc.bat" dosyasina cift tikla.
+   Ikisi de PopDeck.exe'yi bu klasore koyar. Sonra "baslat.bat" ya da exe'ye cift tikla.
+   (Derleme hatasi olursa ilk hata satirlarini gonder: Windows koduna burada derleyici olmadan
+   yazildi, kucuk duzeltmeler gerekebilir.)
+   Bagimlilik YOK: Windows'un kendi GDI+, WIC (resim), MCI (ses), Winsock bilesenleri kullanilir.
+   Python surumu yedek olarak python_surum/ klasorunde (GIF stretch duzeltmesi dahil).
+
+2) CALISTIRMA
+   - PopDeck.exe'ye cift tikla (ya da baslat.bat) -> arayuz acilir.
+   - Hata kaydi: popdeck_log.txt (exe'nin yaninda).
+   - Bu klasordeki exe, "main" ve "diller" klasorleri bir arada durmali.
+
+3) NASIL CALISIR
+   - "main" klasoru HER SEYIN toplandigi ana klasordur.
+   - main icindeki her alt klasor bir KATEGORIDIR (Komik, Alkis, Korku...).
+   - Arayuzden "Yeni Klasor" ile istedigin kadar klasor olustur,
+     her birine "Tus Ata" ile bir tus ver (F9, F8, CTRL+G gibi).
+   - O tusa basinca SADECE o klasorden rastgele bir GIF/PNG secilir,
+     ekranin ortasinda seffaf zeminle oynar ve kapanir.
+   - Klasorleri Windows'ta main icine elle de olusturabilirsin,
+     arayuz otomatik gorur.
+
+   AKILLI RASTGELE: Rastgele secimlerde liste karistirilip sirayla dagitilir.
+   Bir klasordeki tum gorseller birer kez cikmadan ayni gorsel tekrar gelmez,
+   yeni tura gecerken de son cikan hemen basa gelmez. Hem tus basimlarinda
+   hem telefonda gecerlidir.
+
+4) DOSYA EKLEME
+   - "Dosya Ekle..." dugmesi, "Klasoru Ac" ile elle kopyalama ya da telefon/tarayici
+     "Yukle" sekmesi.
+   - Desteklenen gorseller: GIF, PNG, WEBP, JPG/JPEG/JFIF, BMP, TIFF, ICO
+     (+ Windows'a "HEIF/AV1 Goruntu Uzantilari" kuruluysa HEIC/AVIF).
+     iPhone HEIC/HEIF icin Microsoft Store'dan "HEIF Goruntu Uzantilari"ni kur (Windows codec'i kullanilir).
+   - JPEG fotograflari oldugu gibi oynar (EXIF yonu otomatik duzeltilir). Yukleme sirasinda
+     JPEG 2048 px'ten buyukse kucultulur; BMP/TIFF/ICO/HEIC PNG'ye cevrilir.
+   - Ses: MP3 ve WAV.
+
+5) SES
+   - Sesi olan gorselle AYNI ISIMDE mp3/wav koy:
+         komik.gif  +  komik.mp3
+   - Hicbir gorsele ait olmayan sesler (ismi eslesmeyen) o klasorde
+     rastgele calinir. Hic ses yoksa gorsel sessiz acilir.
+
+DIL (6 DIL): Turkce, English, Deutsch, Espanol, Francais, Russkij.
+   Sag ustteki "Dil" kutusundan sec; arayuz aninda yeni dilde kurulur.
+   Telefon sayfasi da ayni dilde acilir (sayfayi yenile). Ilk acilista Windows dili secilir.
+   Ceviriler kodun disinda, "diller" klasorundeki JSON dosyalarindadir:
+     diller/en.json, de.json, es.json, fr.json, ru.json
+     ({"Turkce metin": "ceviri"} + "_ad": dilin adi)
+   * Yeni dil: diller klasorune <kod>.json koy; program otomatik gorur.
+   * Eksik ceviri Turkce gorunur. Exe'nin yanindaki "diller" klasoru paketlenmisin
+     yerine gecer: yeniden derlemeden ceviri duzeltebilirsin.
+   * Kontrol/aractan yararlan:  python ceviri_araci.py kontrol | sablon | ekle | temizle
+     (sadece YENI cumleleri cevirmek icin: sablon -> _eksik.json'u doldur -> ekle)
+
+ARAYUZ: Koyu, yumusak kenarli tasarim. Uc sekme (Klasorler / Ayarlar /
+   Telefon Kumandasi) pencere genisligine esit bolunur. Klasorler kart
+   seklinde listelenir (simge, ad, icerik ozeti, tus rozeti); satira tek
+   tiklayinca secilir, cift tiklayinca tus atama acilir. Dugmeler ortada,
+   esit boyutlu; ayar kartlarinda anahtarlar ve kaydiricilar hizali.
+   Kucuk ekranlarda Ayarlar ve Telefon sekmeleri asagi kaydirilabilir.
+
+ONBELLEK VE RAM (dusuk bellek tasarimi):
+   * Kareler hazirlanirken TEK TEK islenir; hepsi ayni anda RAM'de bekletilmez.
+     Sadece ekrana hazir kareler (Tk PhotoImage) onbellekte tutulur.
+   * Ayni olan ardisik kareler tek kareye indirilir; "Akicilik siniri"ndan hizli
+     kareler birlestirilir (varsayilan 30 FPS).
+   * Kucuk GIF'ler gereksiz buyutulmez ("Maksimum buyutme", varsayilan 2x).
+     480x270'lik GIF tam ekranda 1920x1080 kare uretirdi (16 kat piksel);
+     2x'te 960x540 uretir (4 kat daha az RAM). Tam ekran istersen 4x = sinirsiz.
+   * Cok agir olacak GIF'ler onbellek butcesine sigacak sekilde otomatik
+     kucultulur (butcenin yarisi).
+   * Onbellek limiti varsayilan 400 MB (200-3000). On yukleme limite gelince durur.
+   * Bosta bellek bosaltma: Belirlenen dakika kullanilmazsa onbellek tamamen
+     bosaltilir ve bellek Windows'a geri verilir (varsayilan 10 dk, 0 = kapali).
+     Sonra sadece kullandigin gorseller tekrar onbellege girer.
+   * Sesler Windows'ta ACIK tutulur (en fazla 32 dosya); bosta bosaltmada kapanir.
+   * Ayarlar > Performans ve Onbellek kartinda canli "Program bellegi" yazar
+     (Gorev Yoneticisi'ndeki deger) ve "Onbellegi temizle" dugmesi vardir.
+   Tam ekran + uzun GIF cok RAM ister: sorun yasarsan sirayla Maksimum buyutme'yi
+   dusur, Akicilik sinirini 20-25 yap, Boyut'u %70-80 yap.
+
+SES SENKRONU: Ses dosyasi gorsel gelmeden ONCE acilir, tam ilk kare
+   ekrana ciziince calmaya baslar. GIF artik gecen gercek sureye gore
+   oynar (buyuk GIF'lerde yavaslarsa kare atlar), boylece ne uzar ne
+   kisalir ve sesle birlikte biter. Hala ses erken geliyorsa
+   Ayarlar > Ses > "Ses senkron gecikmesi (ms)" kaydiricisini artir
+   (10-100 ms genelde yeter).
+   Sesin gorselden once bitmesi: ses dosyasi GIF'ten kisaysa dogaldir;
+   ayni uzunlukta hazirla ya da sese sessizlik ekle.
+
+6) ARAYUZDEN AYARLANANLAR
+   GIF'i sonuna kadar oynat (acik = sure siniri yok, GIF bitince kapanir;
+   kapali = "sure" kadar doner), PNG/sabit gorsel suresi, boyut (tam ekran = %100), fade-in, orani bozup doldurma,
+   tiklama gecirme, ses acik/kapali, ses seviyesi, sesin gif ile kesilmesi,
+   arayuzun gizli baslamasi ve "tus dinleme" acma/kapama.
+   Ayarlar main/ayarlar.json dosyasina otomatik kaydedilir.
+
+EKRANDAKI GIF'I ERKEN KAPATMA
+   - Klavyede F10 (Ayarlar sekmesi > Ozel Tuslar'dan degisir). Oynayan gorsel
+     ve sesi aninda kapanir.
+   - Telefonda ustteki kirmizi "Durdur" butonu ayni isi yapar.
+   - GIF yuklenirken (ilk gosterim) basarsan hic gosterilmez.
+
+7) TELEFONDAN KUMANDA (ayni Wi-Fi, uygulama kurmak gerekmez)
+   - Arayuzde "Telefon Kumandasi" sekmesini ac. Orada adres, PIN ve QR kod var.
+   - Telefon ve bilgisayar AYNI Wi-Fi'de olmali.
+   - Telefon kamerasiyla QR'i okut (PIN dahil, tek seferde giris yapar)
+     ya da adresi tarayiciya yaz (ornek: http://192.168.1.25:8080).
+   - Telefonda iki sekme var:
+       * RASTGELE: her klasor icin buyuk bir buton + "Karisik" butonu.
+         Butona basinca o klasorden (Karisik'ta tum gorsellerden) rastgele GIF cikar.
+       * DECK (Stream Deck tarzi): tum GIF/PNG'lerin kucuk resimleri kare
+         tuslar halinde dizilir. Ustteki klasor etiketleriyle filtrele.
+         Bir resme dokununca BIREBIR O gorsel ekrana gelir. Bir GIF oynarken
+         baska bir resme dokunursan eskisi kesilir, yenisi hemen acilir.
+         (GIF/WEBP onizlemeleri ilk kareyi gosterir, kosede rozet vardir.)
+       YUKLE sekmesi (telefon veya bilgisayar tarayicisi):
+         - Hedef klasoru sec ("Yeni klasor..." ile yeni klasor de acabilirsin).
+         - Telefonda "Dosya sec": galeri veya dosya yoneticisi acilir (coklu secim).
+         - Bilgisayardaki tarayicida: dosyalari surukle-birak, "Dosya sec" ile
+           Dosya Gezgini'nden sec, "Klasorden yukle" ile bir klasoru topluca yukle,
+           ya da CTRL+V ile PANODAKI RESMI dogrudan yukle (ekran goruntusu vb.).
+         - GIF/PNG/WEBP ve JPEG oldugu gibi kaydedilir (JPEG yonu yanlis ya da 2048 px'ten
+           buyukse duzeltilip kucultulur); BMP/TIFF/ICO/HEIC PNG'ye cevrilir. MP3/WAV de yuklenir.
+         - Her dosya icerigi dogrulanir (gercekten gorsel/ses mi). En fazla 60 MB;
+           ayni ad varsa _2, _3 eklenir. Yuklenenler PC'de listede hemen gorunur.
+         - Ayarlar'dan kapatilabilir: Telefon Kumandasi > "Telefondan dosya
+           yuklemeye izin ver". PIN kullanmanizi oneririz (PIN bos = ayni Wi-Fi'deki
+           herkes dosya yukleyebilir).
+       Deck etiketleri:
+         - FAVORILER : Resmin/sesin kosesindeki yildiza dokun, favoriye eklenir.
+           Favoriler senin ANA EKRANINdir; Deck acilinca ilk o gelir.
+         - SON       : En son oynatilan 20 oge (tus, telefon, test: hepsi sayilir).
+         - TUMU      : Tum klasorler.
+         - Klasor adlari : Sadece o klasor.
+       SIRALAMA: "Duzenle"ye bas, her tusta cikan ⠿ tutamacini surukleyip
+         birakacagin tusun ustune birak. Favoriler ve her klasor icin sira
+         ayri kaydedilir (main/deck.json). Duzenle modunda tuslar calismaz,
+         yanlislikla fisirdamaz. "Bitti" ile cik.
+       SOUNDBOARD: mp3/wav dosyalari Deck'te 🔊 tusu olur; dokununca EKRANDA
+         HICBIR SEY CIKMADAN sadece ses calar (bir GIF oynarken de calar).
+         Sadece bir gorselle AYNI ISIMDE olmayan sesler tus olur
+         (komik.gif + komik.mp3 ciftinde mp3 gorselin parcasidir).
+         Ipucu: Sadece ses dosyalari iceren ayri bir klasor ("Sesler") yap.
+         Karisik klasorde eslesmeyen sesler, eslesmeyen gorsellerle
+         rastgele birlikte de calabilir.
+   - Tarayici menusunden "Ana ekrana ekle" dersen uygulama gibi acilir.
+   - PIN ilk acilista rastgele uretilir; arayuzden degistirilir, bos
+     birakirsan sifresiz olur (herkes ayni Wi-Fi'den tetikleyebilir).
+   - GUVENLIK DUVARI (otomatik): Program acilinca izin yoksa kendisi sorar.
+     "Evet" de, Windows'un onay penceresinde de "Evet" de; izin (port) ve
+     Windows'un ilk calistirmada kendiliginden actigi ENGEL kurallari
+     duzeltilir. Telefon sekmesinde durum gorunur (izin var/yok) ve
+     "Guvenlik duvarina izin ver" dugmesiyle elle de tetiklenir.
+     Portu degistirirsen yeni port icin tekrar sorar.
+   - Baglanamazsa:
+       * Windows guvenlik duvari sorusunda "Ozel aglar"a izin ver.
+         Sormadiysa firewall_ac.bat'a sag tik -> Yonetici olarak calistir.
+       * Wi-Fi ag turu "Genel" ise "Ozel" yap.
+       * Modemde "AP/Client isolation" aciksa kapat (misafir agi genelde izole).
+       * Mobil veri kapaliyken dene, VPN kullaniyorsan kapat.
+       * Port doluysa arayuzden baska port yaz (ornek 8090).
+   - Telefon kumandasi sadece bilgisayar acikken ve program calisirken
+     (gizli de olsa) calisir. Uygulama bilgisayarda calisan bir web sitesidir;
+     internete acik degildir, sadece ayni yerel agdan erisilir.
+
+8) ARKA PLAN
+   - "Arka Plana Gizle" ya da pencereyi X ile kapatip "Evet" de:
+     arayuz gizlenir, tuslar calismaya devam eder.
+   - Arayuzu geri acma / gizleme tusu: CTRL+SHIFT+F11 (arayuzden degisir)
+   - Programi tamamen kapatma tusu:     CTRL+SHIFT+F12 (arayuzden degisir)
+
+9) OYUNDA GORUNMESI ICIN
+   - Oyunu "Pencereli" veya "Cercevesiz Pencere" (Borderless) modunda ac.
+     "Tam Ekran" (Exclusive Fullscreen) modunda gorunmez (Windows kurali).
+   - Tuslar oyunda calismazsa baslat.bat'a sag tik -> Yonetici olarak calistir.
+   - Anti-cheat'li oyunlarda (Valorant, FACEIT vb.) engellenebilir.
+
+NOT: Buyuk ve cok kareli GIF'ler tam ekranda cok RAM kullanir. Bir GIF'in
+ilk gosterimi 1-2 saniye gecikebilir, sonraki gosterimler hizlidir.
+Cok agirsa boyutu %70-80'e dusur veya GIF'i kucult.
+
+
+9b) TELEFONDA OYNATMA (Gosterim anahtari)
+   - Telefon sayfasinin ustunde "Gosterim: PC / Telefon / Her ikisi" anahtari vardir (secim telefonda hatirlanir).
+       PC        : eskisi gibi, gorsel bilgisayar ekraninda cikar.
+       Telefon   : ayni GIF/PNG ve ses (komik.gif + komik.mp3) PC'deki main klasorunden cekilip
+                   TELEFON ekraninda tam ekran oynar; PC'de bir sey cikmaz.
+       Her ikisi : ikisinde de BIREBIR ayni gorsel oynar.
+   - Ayarlardaki sure, boyut, fade-in, ses seviyesi/gecikmesi, "orani boz" telefonda da gecerlidir.
+   - Ekrana dokunursan ya da ustteki Durdur'a basarsan kapanir. Sesli kutu (soundboard) telefonda sadece ses calar.
+   - Sinir: yalnizca tarayici sayfasinin icinde oynar; telefondaki baska uygulamanin/oyunun ustune binmez.
+     iPhone'da sessiz mod aciksa ses gelmez. Buyuk GIF'ler Wi-Fi'de ilk acilista biraz gecikebilir.
+
+10) OTOMATIK BASLATMA
+   - Win+R -> shell:startup -> acilan klasore PopDeck.exe'nin kisayolunu koy.
+   - Program iki kez acilirsa ikincisi kendini kapatir (port cakismasi olmasin).
+
+11) EKRANI KAPLAMA (GIF stretch)
+   - "Oranı bozup tüm ekranı doldur" ACIKKEN gorsel, ekran cozunurlugu ne olursa olsun
+     tam ekrani kaplar (kare kare ekran boyutuna olceklenir, maksimum buyutme siniri yoktur).
+   - Kapaliyken oran korunur; Boyut % ayari ve "Maksimum buyutme" gecerlidir.
+
+12) CEVIRI ARACI
+   - python tools/ceviri_araci.py kontrol | sablon | ekle | temizle
+     (kaynak kodundaki L("...") ve web sayfasindaki T('...') ifadelerini diller/*.json ile eslestirir)
+
+13) KLASOR YAPISI
+   src/        C++ kaynak kodu (cekirdek: tasinabilir; Windows katmani: app_*, ui, player, hotkeys, wsys, win_codec)
+   tests/      Linux'ta da calisan cekirdek testleri (GIF/QR/JSON/web API)
+   tools/      gomulu veri uretici + ceviri araci
+   diller/     ceviri dosyalari        main/  gorsel-ses klasorleri ve ayarlar
+   python_surum/  eski Python surumu (yedek)

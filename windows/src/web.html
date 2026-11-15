@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>PopDeck</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+body{margin:0;background:#0f1115;color:#f2f3f5;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  padding:env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 24px);user-select:none;-webkit-user-select:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 2px 10px}
+h1{font-size:20px;margin:0}
+#durum{font-size:13px;color:#9aa0a6;display:flex;align-items:center;gap:6px}
+#durdur{border:0;border-radius:999px;padding:9px 15px;font-size:14px;font-weight:700;background:#e5484d;color:#fff;margin-left:auto;margin-right:12px}
+#durdur:active{transform:scale(.94)}
+#nokta{width:10px;height:10px;border-radius:50%;background:#e5484d}
+#nokta.acik{background:#30a46c}
+.sekmeler{display:flex;gap:6px;background:#161922;padding:5px;border-radius:16px;margin:2px 0 14px;position:sticky;top:6px;z-index:5;box-shadow:0 6px 14px #0f1115}
+.sekme{flex:1;border:0;border-radius:12px;padding:12px 4px;font-size:14px;font-weight:700;background:transparent;color:#9aa0a6}
+.sekme.secili{background:#3b5bdb;color:#fff}
+#liste{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button.k{border:0;border-radius:18px;padding:22px 10px;background:#1c2029;color:#f2f3f5;font-size:18px;font-weight:700;
+  min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 2px 0 #00000055;transition:transform .08s,background .15s}
+button.k small{font-weight:400;font-size:12px;color:#9aa0a6}
+button.k:active,button.k.basildi{transform:scale(.95);background:#3b5bdb}
+button.k.bos{opacity:.45}
+button.rastgele{grid-column:1/-1;background:linear-gradient(135deg,#6741d9,#3b5bdb);min-height:92px}
+.bosmesaj{grid-column:1/-1;text-align:center;color:#9aa0a6;padding:30px 10px;line-height:1.5}
+#chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+#chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:0;border-radius:999px;padding:9px 14px;font-size:14px;background:#1c2029;color:#cfd3d8}
+.chip.secili{background:#3b5bdb;color:#fff}
+#arac{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 2px 10px;min-height:40px}
+#ipucu{font-size:12px;color:#9aa0a6;line-height:1.35}
+#duzenle{flex:none;border:0;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;background:#1c2029;color:#cfd3d8}
+#deck.duzen #duzenle{background:#f08c00;color:#111}
+#izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px}
+.tile{position:relative;aspect-ratio:1/1;border:2px solid #2a2f3b;border-radius:16px;background:#1c2029;padding:0;overflow:hidden;
+  transition:transform .08s,border-color .15s;cursor:pointer}
+.tile img{width:100%;height:100%;object-fit:contain;padding:8px;pointer-events:none;display:block}
+.tile.ses{background:linear-gradient(135deg,#1d3b3f,#1c2029)}
+.tile .ikon{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:38px;padding-bottom:14px;pointer-events:none}
+.tile .ad{position:absolute;left:0;right:0;bottom:0;font-size:10px;padding:12px 4px 4px;background:linear-gradient(transparent,#000c);
+  color:#e8eaed;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;pointer-events:none}
+.tile .rozet{position:absolute;top:5px;right:5px;font-size:9px;font-weight:700;background:#000a;color:#fff;border-radius:6px;padding:2px 5px;pointer-events:none}
+.tile .yildiz{position:absolute;left:2px;top:2px;font-size:21px;line-height:1;padding:4px 6px;color:#ffffff80;text-shadow:0 1px 3px #000}
+.tile .yildiz.acik{color:#ffd43b}
+.tile .tutamac{display:none;position:absolute;right:4px;top:4px;width:34px;height:34px;align-items:center;justify-content:center;
+  background:#000b;border-radius:9px;font-size:20px;color:#fff;touch-action:none}
+#deck.duzen .tutamac{display:flex}
+#deck.duzen .rozet{display:none}
+#deck.duzen .tile{border-style:dashed;border-color:#f08c00}
+.tile:active,.tile.basildi{transform:scale(.93);border-color:#748ffc}
+#deck.duzen .tile:active{transform:none;border-color:#f08c00}
+.tile.yer{opacity:.35}
+.tile.hedef{border-color:#ffd43b!important;border-style:solid!important;transform:scale(.95)}
+.klon{position:fixed;z-index:50;pointer-events:none;opacity:.93;transform:scale(1.07);box-shadow:0 12px 26px #000a;margin:0}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 24px);transform:translate(-50%,40px);
+  background:#30a46c;color:#fff;padding:12px 18px;border-radius:14px;font-size:15px;opacity:0;transition:.25s;max-width:90%;text-align:center;pointer-events:none;z-index:60}
+#toast.goster{opacity:1;transform:translate(-50%,0)}
+#toast.hata{background:#e5484d}
+#pinkutu{position:fixed;inset:0;background:#0f1115ee;display:flex;align-items:center;justify-content:center;padding:20px;z-index:70}
+#pinkutu div{background:#1c2029;border-radius:18px;padding:22px;width:100%;max-width:340px;text-align:center}
+#pinkutu input{width:100%;font-size:26px;text-align:center;letter-spacing:6px;padding:12px;border-radius:12px;border:1px solid #333a47;
+  background:#0f1115;color:#fff;margin:12px 0}
+#pinkutu button{width:100%;border:0;border-radius:12px;padding:14px;font-size:17px;font-weight:700;background:#3b5bdb;color:#fff}
+#pinhata{color:#ff8a8e;min-height:20px;font-size:14px}
+.ykart{background:#1c2029;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ykart label{font-size:13px;color:#9aa0a6}
+.ykart select,.ykart input[type=text]{width:100%;padding:13px;font-size:16px;border-radius:12px;border:1px solid #333a47;background:#0f1115;color:#fff;user-select:text;-webkit-user-select:text}
+.ybuton{border:0;border-radius:16px;padding:18px 12px;font-size:17px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6741d9,#3b5bdb);display:flex;flex-direction:column;gap:4px;align-items:center}
+.ybuton small{font-weight:400;font-size:12px;opacity:.85}
+.yikinci{border:1px solid #333a47;border-radius:14px;padding:13px;font-size:15px;font-weight:600;color:#cfd3d8;background:transparent}
+.ybirak{border:2px dashed #3a4256;border-radius:16px;padding:20px 12px;text-align:center;color:#9aa0a6;font-size:14px;line-height:1.45}
+.ybirak.uzerinde{border-color:#748ffc;background:#1f2540}
+#yapistir{min-height:46px;border:1px solid #333a47;border-radius:12px;padding:12px;color:#e8eaed;font-size:14px;background:#0f1115;user-select:text;-webkit-user-select:text;outline:none}
+#yapistir:empty:before{content:attr(data-ph);color:#6b7280}
+#yuklemeler{display:flex;flex-direction:column;gap:8px}
+.ysatir{background:#161922;border-radius:12px;padding:10px 12px;font-size:14px}
+.yad{display:flex;justify-content:space-between;gap:10px}
+.yad span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ybar{height:6px;background:#2a2f3b;border-radius:4px;margin-top:8px;overflow:hidden}
+.ybar i{display:block;height:100%;width:0;background:#3b5bdb;transition:width .15s}
+.ysatir.ok .ybar i{background:#30a46c;width:100%}
+.ysatir.hata .ybar i{background:#e5484d;width:100%}
+.ysonuc{font-size:12px;color:#9aa0a6;margin-top:6px}
+.ysatir.hata .ysonuc{color:#ff8a8e}
+#hedefbar{display:flex;align-items:center;gap:8px;padding:10px 14px 0;font-size:13px;color:#9aa0a6;flex-wrap:wrap}
+#oyna{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#oyna[hidden]{display:none}
+#oyna img{display:block;pointer-events:none}
+</style></head><body>
+<header><h1>PopDeck</h1><button id="durdur" data-t>⏹ Durdur</button><div id="durum"><span id="nokta"></span><span id="durumyazi" data-t>bağlanıyor</span></div></header>
+<div id="hedefbar"><span data-t>Gösterim:</span>
+  <button class="chip" data-h="pc" data-t>PC</button><button class="chip" data-h="telefon" data-t>Telefon</button><button class="chip" data-h="ikisi" data-t>Her ikisi</button></div>
+<nav class="sekmeler">
+  <button class="sekme" data-s="rastgele" data-t>🎲 Rastgele</button>
+  <button class="sekme" data-s="deck" data-t>🎛 Deck</button>
+  <button class="sekme" data-s="yukle" data-t>📤 Yükle</button>
+</nav>
+<section id="rastgele"><main id="liste"></main></section>
+<section id="deck" hidden>
+  <div id="chips"></div>
+  <div id="arac"><span id="ipucu"></span><button id="duzenle">✎ Düzenle</button></div>
+  <div id="izgara"></div>
+</section>
+<section id="yukle" hidden>
+  <div class="ykart">
+    <label data-t>Hedef klasör</label>
+    <select id="hedef"></select>
+    <input id="yeniad" type="text" hidden autocomplete="off">
+    <button id="dosyasec" class="ybuton"><span data-t>📁 Dosya seç</span><small data-t>galeri veya dosya yöneticisi</small></button>
+    <button id="klasorsec" class="yikinci" data-t>📂 Klasörden yükle</button>
+    <div id="birak" class="ybirak" data-t>Dosyaları buraya sürükle • ya da Ctrl+V ile panodaki resmi yapıştır</div>
+    <div id="yapistir" contenteditable="true"></div>
+    <div id="yuklemeler"></div>
+  </div>
+  <input type="file" id="girdi" multiple hidden accept="image/*,audio/*,.gif,.png,.webp,.mp3,.wav">
+  <input type="file" id="girdi2" multiple hidden webkitdirectory>
+</section>
+<div id="oyna" hidden></div>
+<div id="toast"></div>
+<div id="pinkutu" hidden><div>
+  <h2 style="margin:0 0 4px" data-t>PIN gir</h2>
+  <span style="color:#9aa0a6;font-size:14px" data-t>Bilgisayardaki uygulamada yazan PIN</span>
+  <input id="pingiris" type="password" inputmode="text" autocomplete="off">
+  <div id="pinhata"></div>
+  <button id="pinbtn" data-t>Giriş</button>
+</div></div>
+<script>
+const $ = s => document.querySelector(s);
+const D = /*DIL*/{};
+const T = s => (D[s] !== undefined ? D[s] : s);
+document.querySelectorAll('[data-t]').forEach(e => { e.textContent = T(e.textContent.trim()); });
+let pin = localStorage.getItem('gifpin') || '';
+(function(){
+  const p = new URLSearchParams(location.search).get('pin');
+  if (p !== null) { pin = p; localStorage.setItem('gifpin', pin); history.replaceState(null, '', location.pathname); }
+})();
+let sekme = ['deck', 'yukle'].indexOf(localStorage.getItem('gifsekme')) >= 0 ? localStorage.getItem('gifsekme') : 'rastgele';
+let hedef = ['pc', 'telefon', 'ikisi'].indexOf(localStorage.getItem('gifhedef')) >= 0 ? localStorage.getItem('gifhedef') : 'pc';
+let chipSecim = localStorage.getItem('gifchip2') || '';
+let deckVeri = { klasorler: [], favoriler: [], son: [] }, harita = {}, deckImza = '', toastZaman;
+let duzenModu = false, suruk = null;
+
+function toast(m, hata){
+  const t = $('#toast'); t.textContent = m; t.className = 'goster' + (hata ? ' hata' : '');
+  clearTimeout(toastZaman); toastZaman = setTimeout(() => t.className = '', 2200);
+}
+function durum(acik, yazi){ $('#nokta').className = acik ? 'acik' : ''; $('#durumyazi').textContent = yazi || T(acik ? 'bağlı' : 'bağlantı yok'); }
+function pinSor(mesaj){ $('#pinhata').textContent = mesaj || ''; $('#pinkutu').hidden = false; setTimeout(() => $('#pingiris').focus(), 50); }
+async function api(yol, govde){
+  const o = { headers: { 'X-Pin': encodeURIComponent(pin) } };
+  if (govde) { o.method = 'POST'; o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(govde); }
+  const r = await fetch(yol, o);
+  let v = {}; try { v = await r.json(); } catch (e) {}
+  if (r.status === 401 || r.status === 429) { pinSor(pin ? v.hata : ''); throw new Error('yetki'); }
+  return v;
+}
+/* ---------- Telefonda oynatma ---------- */
+const SESSIZ = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+const sesEl = new Audio();
+function sesAc(){ try { sesEl.src = SESSIZ; const p = sesEl.play(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }   // dokunuşta sesi "uyandır" (iOS/Android izni)
+const dosyaUrl = (k, d) => '/api/dosya?k=' + encodeURIComponent(k) + '&d=' + encodeURIComponent(d) + '&pin=' + encodeURIComponent(pin);
+let tOturum = 0, tZaman = null;
+function telefonuKapat(sesiDurdur){
+  tOturum++; clearTimeout(tZaman);
+  const o = $('#oyna'); o.hidden = true; o.textContent = '';
+  if (sesiDurdur !== false) { try { sesEl.pause(); } catch (e) {} }
+}
+async function telefondaOynat(p){
+  telefonuKapat(); const my = tOturum;
+  const k = p.klasor;
+  if (p.tur === 'ses') {                                   // soundboard: sadece ses
+    if (!p.ses_aktif) return;
+    sesEl.src = dosyaUrl(k, p.d); sesEl.volume = Math.max(0, Math.min(1, p.seviye / 100));
+    sesEl.play().catch(() => toast(T('Telefonda oynatılamadı'), true));
+    return;
+  }
+  const im = new Image();
+  im.style.width = p.boz ? '100%' : p.boyut + '%'; im.style.height = p.boz ? '100%' : p.boyut + '%';
+  im.style.objectFit = p.boz ? 'fill' : 'contain';
+  im.src = dosyaUrl(k, p.d);
+  const sesVar = !!(p.ses && p.ses_aktif);
+  let sesHazir = Promise.resolve();
+  if (sesVar) {
+    sesEl.src = dosyaUrl(k, p.ses); sesEl.volume = Math.max(0, Math.min(1, p.seviye / 100)); sesEl.load();
+    sesHazir = Promise.race([new Promise(r => sesEl.addEventListener('canplay', r, { once: true })), new Promise(r => setTimeout(r, 1500))]);
+  }
+  try { await im.decode(); await sesHazir; }
+  catch (e) { toast(T('Telefonda oynatılamadı'), true); return; }
+  if (my !== tOturum) return;
+  const o = $('#oyna');
+  o.textContent = ''; o.appendChild(im);
+  o.style.transition = 'none'; o.style.opacity = 0; o.hidden = false;
+  requestAnimationFrame(() => requestAnimationFrame(() => { o.style.transition = 'opacity ' + Math.max(0, p.fade) + 's'; o.style.opacity = 1; }));
+  if (sesVar) setTimeout(() => { if (my === tOturum) sesEl.play().catch(() => {}); }, Math.max(0, p.gecikme));
+  const ms = (p.sure_ms > 0 && p.sonuna) ? p.sure_ms : p.sure * 1000;
+  tZaman = setTimeout(() => { if (my === tOturum) telefonuKapat(p.kes); }, ms + 50);
+}
+$('#oyna').addEventListener('click', () => telefonuKapat(true));
+
+async function gonder(ad, dugme, dosya){
+  if (navigator.vibrate) navigator.vibrate(30);
+  dugme.classList.add('basildi'); setTimeout(() => dugme.classList.remove('basildi'), 250);
+  if (hedef !== 'pc') sesAc();
+  try {
+    const govde = { klasor: ad }; if (dosya) govde.dosya = dosya;
+    if (hedef === 'pc') {
+      const v = await api('/api/tetik', govde);
+      toast(v.ok ? T('Gönderildi:') + ' ' + v.klasor : (v.hata || T('Hata')), !v.ok);
+    } else {
+      const p = await api('/api/telefon', govde);
+      if (!p.ok) { toast(p.hata || T('Hata'), true); return; }
+      telefondaOynat(p);
+      if (hedef === 'ikisi') {                              // PC'de BİREBİR aynı görsel
+        const v = await api('/api/tetik', { klasor: p.klasor, dosya: p.d });
+        if (!v.ok) toast(v.hata || T('Hata'), true);
+      }
+    }
+    if (sekme === 'deck') setTimeout(deckYukle, 400);
+  } catch (e) { if (e.message !== 'yetki') { toast(T('Bağlantı hatası'), true); durum(false); } }
+}
+function hedefCiz(){ document.querySelectorAll('#hedefbar [data-h]').forEach(b => b.classList.toggle('secili', b.dataset.h === hedef)); }
+document.querySelectorAll('#hedefbar [data-h]').forEach(b => b.addEventListener('click', () => {
+  hedef = b.dataset.h; localStorage.setItem('gifhedef', hedef); hedefCiz(); if (hedef !== 'pc') sesAc();
+}));
+hedefCiz();
+function bosMesaj(kutu, yazi){ const d = document.createElement('div'); d.className = 'bosmesaj'; d.textContent = yazi; kutu.appendChild(d); }
+
+/* ---------- Rastgele sekmesi ---------- */
+function dugmeYap(ad, alt, sinif, tiklama){
+  const b = document.createElement('button'); b.className = 'k ' + (sinif || '');
+  const a = document.createElement('span'); a.textContent = ad; b.appendChild(a);
+  if (alt) { const s = document.createElement('small'); s.textContent = alt; b.appendChild(s); }
+  b.addEventListener('click', () => tiklama(b)); return b;
+}
+function ciz(klasorler){
+  const l = $('#liste'); l.textContent = '';
+  if (!klasorler.length) { bosMesaj(l, T('Henüz klasör yok. Bilgisayardaki uygulamadan klasör ekle.')); return; }
+  l.appendChild(dugmeYap(T('🎲 Karışık'), T('tüm görsellerden rastgele'), 'rastgele', b => gonder('__rastgele__', b)));
+  klasorler.forEach(k => {
+    const alt = (k.tus ? k.tus + ' • ' : '') + k.gorsel + ' ' + T('görsel') + (k.ses ? ' • ' + k.ses + ' ' + T('ses') : '');
+    l.appendChild(dugmeYap(k.ad, alt, k.gorsel ? '' : 'bos', b => gonder(k.ad, b)));
+  });
+}
+async function yukle(){
+  if (!$('#pinkutu').hidden) return;
+  try { const v = await api('/api/klasorler'); ciz(v.klasorler); durum(true); }
+  catch (e) { if (e.message !== 'yetki') durum(false); }
+}
+
+/* ---------- Deck sekmesi ---------- */
+const SES_TURLERI = ['mp3', 'wav'];
+const sesMi = o => SES_TURLERI.includes(o.t);
+const siralanabilir = () => chipSecim === 'fav' || chipSecim.indexOf('k:') === 0;
+
+function haritaKur(){
+  harita = {};
+  deckVeri.klasorler.forEach(k => k.ogeler.forEach(o => { harita[k.ad + '/' + o.d] = { k: k.ad, o: o }; }));
+}
+function gorunumIdleri(){
+  if (chipSecim === 'fav') return deckVeri.favoriler.filter(i => harita[i]);
+  if (chipSecim === 'son') return deckVeri.son.filter(i => harita[i]).slice(0, 20);
+  const ids = [];
+  deckVeri.klasorler.forEach(k => {
+    if (chipSecim === '*' || chipSecim === 'k:' + k.ad) k.ogeler.forEach(o => ids.push(k.ad + '/' + o.d));
+  });
+  return ids;
+}
+function chipYap(anahtar, yazi){
+  const c = document.createElement('button'); c.className = 'chip' + (chipSecim === anahtar ? ' secili' : ''); c.textContent = yazi;
+  c.addEventListener('click', () => { chipSecim = anahtar; localStorage.setItem('gifchip2', anahtar); deckCiz(); });
+  return c;
+}
+function tileYap(id){
+  const h = harita[id], o = h.o, ses = sesMi(o);
+  const b = document.createElement('div'); b.className = 'tile' + (ses ? ' ses' : ''); b.dataset.id = id; b.setAttribute('role', 'button');
+  if (ses) { const ik = document.createElement('div'); ik.className = 'ikon'; ik.textContent = '🔊'; b.appendChild(ik); }
+  else {
+    const im = document.createElement('img'); im.loading = 'lazy'; im.alt = o.d;
+    im.src = '/api/kucuk?k=' + encodeURIComponent(h.k) + '&d=' + encodeURIComponent(o.d) + '&v=' + o.v + '&pin=' + encodeURIComponent(pin);
+    b.appendChild(im);
+  }
+  const ad = document.createElement('div'); ad.className = 'ad'; ad.textContent = o.d.replace(/\.[^.]+$/, ''); b.appendChild(ad);
+  if (ses || o.t === 'gif' || o.t === 'webp') { const r = document.createElement('div'); r.className = 'rozet'; r.textContent = ses ? 'SES' : o.t.toUpperCase(); b.appendChild(r); }
+  const y = document.createElement('span'); y.className = 'yildiz' + (deckVeri.favoriler.includes(id) ? ' acik' : '');
+  y.textContent = y.className.indexOf('acik') >= 0 ? '★' : '☆';
+  y.addEventListener('click', e => { e.stopPropagation(); favoriDegistir(id); });
+  b.appendChild(y);
+  if (duzenModu && siralanabilir()) {
+    const t = document.createElement('span'); t.className = 'tutamac'; t.textContent = '⠿';
+    t.addEventListener('pointerdown', e => surukleBasla(e, b)); b.appendChild(t);
+  }
+  b.addEventListener('click', () => { if (!duzenModu) gonder(h.k, b, o.d); });
+  return b;
+}
+function deckCiz(){
+  haritaKur();
+  if (!chipSecim) chipSecim = deckVeri.favoriler.length ? 'fav' : '*';
+  if (chipSecim.indexOf('k:') === 0 && !deckVeri.klasorler.some(k => 'k:' + k.ad === chipSecim)) chipSecim = '*';
+  const chips = $('#chips'); chips.textContent = '';
+  const toplam = deckVeri.klasorler.reduce((t, k) => t + k.ogeler.length, 0);
+  chips.appendChild(chipYap('fav', T('⭐ Favoriler') + ' (' + deckVeri.favoriler.filter(i => harita[i]).length + ')'));
+  chips.appendChild(chipYap('son', T('🕘 Son')));
+  chips.appendChild(chipYap('*', T('Tümü') + ' (' + toplam + ')'));
+  deckVeri.klasorler.forEach(k => chips.appendChild(chipYap('k:' + k.ad, k.ad + ' (' + k.ogeler.length + ')')));
+  const secili = chips.querySelector('.secili'); if (secili) secili.scrollIntoView({ inline: 'center', block: 'nearest' });
+
+  $('#deck').classList.toggle('duzen', duzenModu);
+  $('#duzenle').textContent = duzenModu ? T('✔ Bitti') : T('✎ Düzenle');
+  $('#ipucu').textContent = !duzenModu ? '' : (siralanabilir()
+    ? T('Sıralamak için ⠿ tutamacını sürükle • ☆ ile favori ekle/çıkar')
+    : T('Bu görünümde sıralama yok. Favoriler veya bir klasör seç.'));
+
+  const izgara = $('#izgara'); izgara.textContent = '';
+  const ids = gorunumIdleri();
+  ids.forEach(id => izgara.appendChild(tileYap(id)));
+  if (!ids.length) {
+    const g = document.createElement('div'); g.style.gridColumn = '1/-1';
+    bosMesaj(g, chipSecim === 'fav' ? T('Henüz favori yok. Bir görselin ☆ simgesine dokun.')
+      : chipSecim === 'son' ? T('Henüz bir şey oynatılmadı.')
+      : T('Burada öğe yok. Bilgisayardaki uygulamadan dosya ekle.'));
+    izgara.appendChild(g);
+  }
+}
+async function deckYukle(){
+  if (!$('#pinkutu').hidden || suruk) return;
+  try {
+    const v = await api('/api/gorseller'); durum(true);
+    const imza = JSON.stringify([v.klasorler, v.favoriler, v.son]);
+    if (imza !== deckImza) { deckImza = imza; deckVeri = { klasorler: v.klasorler, favoriler: v.favoriler, son: v.son }; deckCiz(); }
+  } catch (e) { if (e.message !== 'yetki') durum(false); }
+}
+async function deckKaydet(govde){
+  try { const v = await api('/api/deck', govde); if (!v.ok) toast(v.hata || T('Kaydedilemedi'), true); }
+  catch (e) { if (e.message !== 'yetki') toast(T('Kaydedilemedi'), true); }
+  deckImza = ''; deckYukle();
+}
+function favoriDegistir(id){
+  const yeni = !deckVeri.favoriler.includes(id);
+  if (navigator.vibrate) navigator.vibrate(15);
+  deckVeri.favoriler = yeni ? deckVeri.favoriler.concat([id]) : deckVeri.favoriler.filter(x => x !== id);
+  toast(yeni ? T('★ Favorilere eklendi') : T('Favorilerden çıkarıldı'));
+  deckCiz();
+  deckKaydet({ islem: 'favori', id: id, deger: yeni });
+}
+
+/* ---- Surukleyerek siralama (tutamac ile) ---- */
+function hedefBul(x, y){
+  const el = document.elementFromPoint(x, y); if (!el) return null;
+  const t = el.closest('.tile');
+  return (t && t !== suruk.tile && t.parentNode === $('#izgara')) ? t : null;
+}
+function hedefIsaretle(){
+  const h = hedefBul(suruk.x, suruk.y);
+  if (suruk.hedef && suruk.hedef !== h) suruk.hedef.classList.remove('hedef');
+  if (h) h.classList.add('hedef');
+  suruk.hedef = h;
+}
+function surukleBasla(e, tile){
+  if (suruk || !siralanabilir()) return;
+  e.preventDefault(); e.stopPropagation();
+  const r = tile.getBoundingClientRect();
+  const klon = tile.cloneNode(true); klon.className = 'tile klon';
+  klon.style.width = r.width + 'px'; klon.style.height = r.height + 'px'; klon.style.left = r.left + 'px'; klon.style.top = r.top + 'px';
+  document.body.appendChild(klon); tile.classList.add('yer');
+  const tut = e.currentTarget;
+  suruk = { tile: tile, klon: klon, tut: tut, ox: e.clientX - r.left, oy: e.clientY - r.top, x: e.clientX, y: e.clientY, hedef: null };
+  try { tut.setPointerCapture(e.pointerId); } catch (x) {}
+  tut.addEventListener('pointermove', surukleHareket);
+  tut.addEventListener('pointerup', surukleBitir);
+  tut.addEventListener('pointercancel', surukleBitir);
+  suruk.zaman = setInterval(() => {
+    if (!suruk) return;
+    const k = window.innerHeight;
+    if (suruk.y < 90) window.scrollBy(0, -14); else if (suruk.y > k - 90) window.scrollBy(0, 14);
+    hedefIsaretle();
+  }, 30);
+}
+function surukleHareket(e){
+  if (!suruk) return;
+  suruk.x = e.clientX; suruk.y = e.clientY;
+  suruk.klon.style.left = (e.clientX - suruk.ox) + 'px'; suruk.klon.style.top = (e.clientY - suruk.oy) + 'px';
+  hedefIsaretle();
+}
+function surukleBitir(){
+  if (!suruk) return;
+  const s = suruk; suruk = null;
+  clearInterval(s.zaman);
+  s.tut.removeEventListener('pointermove', surukleHareket);
+  s.tut.removeEventListener('pointerup', surukleBitir);
+  s.tut.removeEventListener('pointercancel', surukleBitir);
+  s.klon.remove(); s.tile.classList.remove('yer');
+  const h = s.hedef; if (h) h.classList.remove('hedef');
+  if (!h) return;
+  const izgara = $('#izgara'), liste = Array.from(izgara.children);
+  if (liste.indexOf(s.tile) < liste.indexOf(h)) izgara.insertBefore(s.tile, h.nextSibling); else izgara.insertBefore(s.tile, h);
+  const idler = Array.from(izgara.querySelectorAll('.tile')).map(t => t.dataset.id);
+  if (chipSecim === 'fav') {
+    deckVeri.favoriler = idler;
+    deckKaydet({ islem: 'favori_sira', idler: idler });
+  } else {
+    const ad = chipSecim.slice(2), dosyalar = idler.map(i => harita[i].o.d);
+    const k = deckVeri.klasorler.find(x => x.ad === ad);
+    if (k) k.ogeler.sort((a, b) => dosyalar.indexOf(a.d) - dosyalar.indexOf(b.d));
+    deckKaydet({ islem: 'sira', klasor: ad, dosyalar: dosyalar });
+  }
+}
+
+/* ---------- Sekme gecisi ---------- */
+function yenile(){ if (sekme === 'deck') deckYukle(); else if (sekme === 'yukle') yukleHazirla(); else yukle(); }
+function sekmeGoster(s){
+  sekme = s; localStorage.setItem('gifsekme', s);
+  $('#rastgele').hidden = s !== 'rastgele'; $('#deck').hidden = s !== 'deck'; $('#yukle').hidden = s !== 'yukle';
+  document.querySelectorAll('.sekme').forEach(b => b.classList.toggle('secili', b.dataset.s === s));
+  yenile();
+}
+document.querySelectorAll('.sekme').forEach(b => b.addEventListener('click', () => sekmeGoster(b.dataset.s)));
+$('#durdur').addEventListener('click', async () => {
+  if (navigator.vibrate) navigator.vibrate(30);
+  telefonuKapat(true);
+  try { const v = await api('/api/durdur', {}); toast(v.ok ? T('Durduruldu') : (v.hata || T('Hata')), !v.ok); }
+  catch (e) { if (e.message !== 'yetki') { toast(T('Bağlantı hatası'), true); durum(false); } }
+});
+$('#duzenle').addEventListener('click', () => { duzenModu = !duzenModu; deckCiz(); });
+$('#pinbtn').addEventListener('click', () => { pin = $('#pingiris').value.trim(); localStorage.setItem('gifpin', pin); $('#pinkutu').hidden = true; deckImza = ''; yenile(); });
+$('#pingiris').addEventListener('keydown', e => { if (e.key === 'Enter') $('#pinbtn').click(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) yenile(); });
+/* ---------- Yukle sekmesi (galeri / dosya yoneticisi / pano / surukle-birak) ---------- */
+const UZ_OK = /*UZ*/[];                            // Sunucu desteklenen uzantilari gonderir
+const YUK_LIMIT = 60 * 1024 * 1024;
+let yukKlasorler = [], yukImza = '', yukTercih = '', yukKuyruk = [], yukCalisiyor = false;
+const dokunmatik = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches);
+const uzanti = ad => (ad.split('.').pop() || '').toLowerCase();
+
+function hedefDoldur(){
+  const s = $('#hedef'), onceki = yukTercih || s.value || localStorage.getItem('gifhedef') || '';
+  yukTercih = ''; s.textContent = '';
+  yukKlasorler.forEach(ad => { const o = document.createElement('option'); o.value = ad; o.textContent = ad; s.appendChild(o); });
+  const y = document.createElement('option'); y.value = '__yeni__'; y.textContent = T('➕ Yeni klasör…'); s.appendChild(y);
+  s.value = (yukKlasorler.indexOf(onceki) >= 0 || onceki === '__yeni__') ? onceki : (yukKlasorler[0] || '__yeni__');
+  hedefDegisti();
+}
+function hedefDegisti(){ $('#yeniad').hidden = $('#hedef').value !== '__yeni__'; localStorage.setItem('gifhedef', $('#hedef').value); }
+function hedefBilgisi(){
+  const v = $('#hedef').value;
+  if (v === '__yeni__') { const ad = $('#yeniad').value.trim(); return ad ? { klasor: ad, yeni: true } : null; }
+  return v ? { klasor: v, yeni: false } : null;
+}
+async function yukleHazirla(){
+  if (!$('#pinkutu').hidden) return;
+  try {
+    const v = await api('/api/klasorler'); durum(true);
+    const imza = JSON.stringify(v.klasorler.map(k => k.ad));
+    if (imza !== yukImza) { yukImza = imza; yukKlasorler = v.klasorler.map(k => k.ad); hedefDoldur(); }
+  } catch (e) { if (e.message !== 'yetki') durum(false); }
+}
+function ysatirYap(ad){
+  const k = document.createElement('div'); k.className = 'ysatir';
+  const a = document.createElement('div'); a.className = 'yad';
+  const s1 = document.createElement('span'); s1.textContent = ad;
+  const s2 = document.createElement('span'); s2.textContent = '0%';
+  a.appendChild(s1); a.appendChild(s2); k.appendChild(a);
+  const bar = document.createElement('div'); bar.className = 'ybar'; const i = document.createElement('i'); bar.appendChild(i); k.appendChild(bar);
+  const sn = document.createElement('div'); sn.className = 'ysonuc'; k.appendChild(sn);
+  $('#yuklemeler').prepend(k);
+  return {
+    ilerle: o => { i.style.width = Math.round(o * 100) + '%'; s2.textContent = Math.round(o * 100) + '%'; },
+    bitti: (ok, metin) => { k.classList.add(ok ? 'ok' : 'hata'); s2.textContent = ok ? '✓' : '✕'; sn.textContent = metin; }
+  };
+}
+function yukEkle(f, hedef){
+  let ad = f.name || '';
+  if (!ad || /^image\.\w+$/i.test(ad)) {            // Panodan yapistirilan resim: zamanli ad ver
+    const uz = ((f.type || 'image/png').split('/')[1] || 'png').replace('jpeg', 'jpg').replace(/[^a-z0-9]/gi, '');
+    const z = new Date(), p = n => String(n).padStart(2, '0');
+    ad = 'yapistirilan_' + z.getFullYear() + p(z.getMonth() + 1) + p(z.getDate()) + '_' + p(z.getHours()) + p(z.getMinutes()) + p(z.getSeconds()) + '_' + Math.floor(Math.random() * 900 + 100) + '.' + uz;
+  }
+  const satir = ysatirYap(ad);
+  if (UZ_OK.indexOf(uzanti(ad)) < 0) { satir.bitti(false, T('Desteklenmeyen dosya:') + ' .' + uzanti(ad)); return; }
+  if (f.size > YUK_LIMIT) { satir.bitti(false, T('Dosya çok büyük')); return; }
+  yukKuyruk.push({ f: f, ad: ad, hedef: hedef, satir: satir });
+  yukIsle();
+}
+function dosyalariYukle(dosyalar){
+  const hedef = hedefBilgisi();
+  if (!hedef) { toast(T('Önce bir hedef klasör seç.'), true); return; }
+  Array.from(dosyalar).forEach(f => yukEkle(f, hedef));
+}
+function xhrYukle(is){
+  return new Promise(cevap => {
+    const x = new XMLHttpRequest();
+    x.open('POST', '/api/yukle?k=' + encodeURIComponent(is.hedef.klasor) + '&d=' + encodeURIComponent(is.ad) + (is.hedef.yeni ? '&yeni=1' : ''));
+    x.setRequestHeader('X-Pin', encodeURIComponent(pin));
+    x.setRequestHeader('Content-Type', 'application/octet-stream');
+    x.upload.onprogress = e => { if (e.lengthComputable) is.satir.ilerle(e.loaded / e.total); };
+    x.onload = () => {
+      let v = {}; try { v = JSON.parse(x.responseText); } catch (e) {}
+      if (x.status === 401 || x.status === 429) pinSor(pin ? v.hata : '');
+      cevap(v);
+    };
+    x.onerror = () => cevap({ ok: false, hata: T('Bağlantı hatası') });
+    x.send(is.f);
+  });
+}
+async function yukIsle(){
+  if (yukCalisiyor) return;
+  yukCalisiyor = true;
+  while (yukKuyruk.length) {
+    const is = yukKuyruk.shift();
+    const v = await xhrYukle(is);
+    if (v.ok) {
+      is.satir.bitti(true, v.dosya + ' → ' + v.klasor);
+      if (is.hedef.yeni) { is.hedef.yeni = false; $('#yeniad').value = ''; yukTercih = v.klasor; yukImza = ''; yukleHazirla(); }
+    } else is.satir.bitti(false, v.hata || T('Yüklenemedi'));
+  }
+  yukCalisiyor = false;
+}
+$('#yeniad').placeholder = T('Yeni klasörün adı');
+$('#yapistir').setAttribute('data-ph', T('Yapıştırma alanı: uzun bas → Yapıştır'));
+$('#hedef').addEventListener('change', hedefDegisti);
+$('#dosyasec').addEventListener('click', () => $('#girdi').click());
+$('#girdi').addEventListener('change', e => { dosyalariYukle(e.target.files); e.target.value = ''; });
+$('#klasorsec').addEventListener('click', () => $('#girdi2').click());
+$('#girdi2').addEventListener('change', e => { dosyalariYukle(Array.from(e.target.files).filter(f => UZ_OK.indexOf(uzanti(f.name)) >= 0)); e.target.value = ''; });
+if (dokunmatik) $('#klasorsec').hidden = true;      // Telefonda klasor secimi yok
+['dragenter', 'dragover'].forEach(ev => document.addEventListener(ev, e => { if (sekme === 'yukle') { e.preventDefault(); $('#birak').classList.add('uzerinde'); } }));
+document.addEventListener('dragleave', () => $('#birak').classList.remove('uzerinde'));
+document.addEventListener('drop', e => {
+  $('#birak').classList.remove('uzerinde');
+  if (sekme !== 'yukle') return;
+  e.preventDefault();
+  if (e.dataTransfer && e.dataTransfer.files.length) dosyalariYukle(e.dataTransfer.files);
+});
+document.addEventListener('paste', e => {          // Ctrl+V / uzun bas -> Yapistir: panodaki resim/dosya dogrudan yuklenir
+  if (sekme !== 'yukle') return;
+  const dosyalar = [], items = (e.clipboardData && e.clipboardData.items) || [];
+  for (let i = 0; i < items.length; i++) { if (items[i].kind === 'file') { const f = items[i].getAsFile(); if (f) dosyalar.push(f); } }
+  if (dosyalar.length) { e.preventDefault(); dosyalariYukle(dosyalar); }
+  setTimeout(() => { if ($('#yapistir').textContent) $('#yapistir').textContent = ''; }, 0);
+});
+sekmeGoster(sekme); setInterval(() => { if (!document.hidden) yenile(); }, 6000);
+</script></body></html>

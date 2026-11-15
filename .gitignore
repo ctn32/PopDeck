@@ -1,0 +1,25 @@
+# Derleme ciktilari
+build/
+dist/
+*.exe
+*.obj
+*.o
+*.spec
+__pycache__/
+*.pyc
+
+# Android
+.gradle/
+.idea/
+local.properties
+*.apk
+*.aab
+*.iml
+
+# Kullanici verileri (her kullanicida farkli)
+**/main/*
+!**/main/Genel/
+**/main/Genel/*
+!**/main/Genel/BURAYA_DOSYA_ATIN.txt
+popdeck_log.txt
+diller/_eksik.json

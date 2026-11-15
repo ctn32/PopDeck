@@ -1,0 +1,2 @@
+Bu klasore .gif / .png (ve istersen .mp3 / .wav) dosyalarini at.
+Sesi olan gorselle AYNI ISIMDE ses koy: komik.gif + komik.mp3
