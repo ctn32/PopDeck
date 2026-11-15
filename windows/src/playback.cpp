@@ -1,6 +1,6 @@
-#include "oynatici.hpp"
+#include "playback.hpp"
 #include "lang.hpp"
-#include "wsys.hpp"
+#include "winsys.hpp"
 #include "uipost.hpp"
 
 Oynatici::Oynatici(Cekirdek& c, std::function<void(const std::string&)> on_oynat) : c_(c), on_oynat_(on_oynat) {

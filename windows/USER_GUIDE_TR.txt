@@ -2,26 +2,26 @@ POPDECK  (C++ surumu)
 ==============================
 
 Bu klasor PopDeck'in TAMAMEN C++ ile yeniden yazilmis surumudur (Python/Tkinter gerekmez).
-Ayar dosyalari (main/ayarlar.json, main/deck.json), diller/*.json ve "main" klasoru
+Ayar dosyalari (main/settings.json, main/deck.json), lang/*.json ve "main" klasoru
 Python surumuyle AYNI bicimdedir; eski klasorlerini oldugu gibi kullanabilirsin.
 
 1) DERLEME (bir kere; sonunda tek dosya: PopDeck.exe)
    Secenek A - MinGW-w64 (ucretsiz, kucuk):
      - https://www.msys2.org adresinden MSYS2 kur, "MSYS2 MINGW64" kabugunda:
          pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make
-     - C:\msys64\mingw64\bin klasorunu PATH'e ekle, sonra "derle_mingw.bat" dosyasina cift tikla.
+     - C:\msys64\mingw64\bin klasorunu PATH'e ekle, sonra "build_mingw.bat" dosyasina cift tikla.
    Secenek B - Visual Studio 2019/2022 ("C++ ile masaustu gelistirme" yuklu):
-     - "derle_msvc.bat" dosyasina cift tikla.
-   Ikisi de PopDeck.exe'yi bu klasore koyar. Sonra "baslat.bat" ya da exe'ye cift tikla.
+     - "build_msvc.bat" dosyasina cift tikla.
+   Ikisi de PopDeck.exe'yi bu klasore koyar. Sonra "start.bat" ya da exe'ye cift tikla.
    (Derleme hatasi olursa ilk hata satirlarini gonder: Windows koduna burada derleyici olmadan
    yazildi, kucuk duzeltmeler gerekebilir.)
    Bagimlilik YOK: Windows'un kendi GDI+, WIC (resim), MCI (ses), Winsock bilesenleri kullanilir.
    Python surumu yedek olarak python_surum/ klasorunde (GIF stretch duzeltmesi dahil).
 
 2) CALISTIRMA
-   - PopDeck.exe'ye cift tikla (ya da baslat.bat) -> arayuz acilir.
+   - PopDeck.exe'ye cift tikla (ya da start.bat) -> arayuz acilir.
    - Hata kaydi: popdeck_log.txt (exe'nin yaninda).
-   - Bu klasordeki exe, "main" ve "diller" klasorleri bir arada durmali.
+   - Bu klasordeki exe, "main" ve "lang" klasorleri bir arada durmali.
 
 3) NASIL CALISIR
    - "main" klasoru HER SEYIN toplandigi ana klasordur.
@@ -57,14 +57,14 @@ Python surumuyle AYNI bicimdedir; eski klasorlerini oldugu gibi kullanabilirsin.
 DIL (6 DIL): Turkce, English, Deutsch, Espanol, Francais, Russkij.
    Sag ustteki "Dil" kutusundan sec; arayuz aninda yeni dilde kurulur.
    Telefon sayfasi da ayni dilde acilir (sayfayi yenile). Ilk acilista Windows dili secilir.
-   Ceviriler kodun disinda, "diller" klasorundeki JSON dosyalarindadir:
-     diller/en.json, de.json, es.json, fr.json, ru.json
+   Ceviriler kodun disinda, "lang" klasorundeki JSON dosyalarindadir:
+     lang/en.json, de.json, es.json, fr.json, ru.json
      ({"Turkce metin": "ceviri"} + "_ad": dilin adi)
-   * Yeni dil: diller klasorune <kod>.json koy; program otomatik gorur.
-   * Eksik ceviri Turkce gorunur. Exe'nin yanindaki "diller" klasoru paketlenmisin
+   * Yeni dil: lang klasorune <kod>.json koy; program otomatik gorur.
+   * Eksik ceviri Turkce gorunur. Exe'nin yanindaki "lang" klasoru paketlenmisin
      yerine gecer: yeniden derlemeden ceviri duzeltebilirsin.
-   * Kontrol/aractan yararlan:  python ceviri_araci.py kontrol | sablon | ekle | temizle
-     (sadece YENI cumleleri cevirmek icin: sablon -> _eksik.json'u doldur -> ekle)
+   * Arac:  python translate_tool.py check | template | merge | clean
+     (sadece YENI cumleleri cevirmek icin: template -> fill _missing.json -> merge)
 
 ARAYUZ: Koyu, yumusak kenarli tasarim. Uc sekme (Klasorler / Ayarlar /
    Telefon Kumandasi) pencere genisligine esit bolunur. Klasorler kart
@@ -107,7 +107,7 @@ SES SENKRONU: Ses dosyasi gorsel gelmeden ONCE acilir, tam ilk kare
    kapali = "sure" kadar doner), PNG/sabit gorsel suresi, boyut (tam ekran = %100), fade-in, orani bozup doldurma,
    tiklama gecirme, ses acik/kapali, ses seviyesi, sesin gif ile kesilmesi,
    arayuzun gizli baslamasi ve "tus dinleme" acma/kapama.
-   Ayarlar main/ayarlar.json dosyasina otomatik kaydedilir.
+   Ayarlar main/settings.json dosyasina otomatik kaydedilir.
 
 EKRANDAKI GIF'I ERKEN KAPATMA
    - Klavyede F10 (Ayarlar sekmesi > Ozel Tuslar'dan degisir). Oynayan gorsel
@@ -169,8 +169,8 @@ EKRANDAKI GIF'I ERKEN KAPATMA
      Portu degistirirsen yeni port icin tekrar sorar.
    - Baglanamazsa:
        * Windows guvenlik duvari sorusunda "Ozel aglar"a izin ver.
-         Sormadiysa firewall_ac.bat'a sag tik -> Yonetici olarak calistir.
-       * Wi-Fi ag turu "Genel" ise "Ozel" yap.
+         Sormadiysa open_firewall.bat'a sag tik -> Yonetici olarak calistir.
+       * Wi-Fi ag turu "General" ise "Ozel" yap.
        * Modemde "AP/Client isolation" aciksa kapat (misafir agi genelde izole).
        * Mobil veri kapaliyken dene, VPN kullaniyorsan kapat.
        * Port doluysa arayuzden baska port yaz (ornek 8090).
@@ -187,7 +187,7 @@ EKRANDAKI GIF'I ERKEN KAPATMA
 9) OYUNDA GORUNMESI ICIN
    - Oyunu "Pencereli" veya "Cercevesiz Pencere" (Borderless) modunda ac.
      "Tam Ekran" (Exclusive Fullscreen) modunda gorunmez (Windows kurali).
-   - Tuslar oyunda calismazsa baslat.bat'a sag tik -> Yonetici olarak calistir.
+   - Tuslar oyunda calismazsa start.bat'a sag tik -> Yonetici olarak calistir.
    - Anti-cheat'li oyunlarda (Valorant, FACEIT vb.) engellenebilir.
 
 NOT: Buyuk ve cok kareli GIF'ler tam ekranda cok RAM kullanir. Bir GIF'in
@@ -216,12 +216,12 @@ Cok agirsa boyutu %70-80'e dusur veya GIF'i kucult.
    - Kapaliyken oran korunur; Boyut % ayari ve "Maksimum buyutme" gecerlidir.
 
 12) CEVIRI ARACI
-   - python tools/ceviri_araci.py kontrol | sablon | ekle | temizle
-     (kaynak kodundaki L("...") ve web sayfasindaki T('...') ifadelerini diller/*.json ile eslestirir)
+   - python tools/translate_tool.py check | template | merge | clean
+     (kaynak kodundaki L("...") ve web sayfasindaki T('...') ifadelerini lang/*.json ile eslestirir)
 
 13) KLASOR YAPISI
    src/        C++ kaynak kodu (cekirdek: tasinabilir; Windows katmani: app_*, ui, player, hotkeys, wsys, win_codec)
    tests/      Linux'ta da calisan cekirdek testleri (GIF/QR/JSON/web API)
    tools/      gomulu veri uretici + ceviri araci
-   diller/     ceviri dosyalari        main/  gorsel-ses klasorleri ve ayarlar
+   lang/     ceviri dosyalari        main/  gorsel-ses klasorleri ve ayarlar
    python_surum/  eski Python surumu (yedek)

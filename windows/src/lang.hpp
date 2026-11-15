@@ -1,4 +1,4 @@
-// Dil sistemi: Turkce metin = anahtar. Ceviriler diller/*.json (gomulu + exe yanindaki klasor)
+// Dil sistemi: Turkce metin = anahtar. Ceviriler lang/*.json (gomulu + exe yanindaki klasor)
 #pragma once
 #include "util.hpp"
 #include <map>

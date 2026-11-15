@@ -480,7 +480,7 @@ void MainWindow::guvenlik_duvari_ac() {
     int port = core.ayar.kopya().web_port;
     if (!fw_izin_baslat(port)) {
         msg(L("Güvenlik duvarı"), L("İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\n"
-                                      "Alternatif: firewall_ac.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'."), MB_OK | MB_ICONWARNING);
+                                      "Alternatif: open_firewall.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'."), MB_OK | MB_ICONWARNING);
         fw_durum_guncelle();
         return;
     }

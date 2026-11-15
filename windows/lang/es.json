@@ -117,7 +117,7 @@
  "Öğe bulunamadı": "Elemento no encontrado",
  "özel tuşlar": "teclas especiales",
  "İptal": "Cancelar",
- "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: firewall_ac.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "No se pudo añadir el permiso (quizá pulsaste 'No').\n\nAlternativa: clic derecho en firewall_ac.bat → 'Ejecutar como administrador'.",
+ "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: open_firewall.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "No se pudo añadir el permiso (quizá pulsaste 'No').\n\nAlternativa: clic derecho en open_firewall.bat → 'Ejecutar como administrador'.",
  "İzin eksikse açılışta otomatik iste": "Pedir automáticamente al iniciar si falta el permiso",
  "Şimdi atamak istediğin tuşa (ya da CTRL+G gibi bir kombinasyona) bas.\nESC = iptal": "Pulsa ahora la tecla (o una combinación como CTRL+G) que quieres asignar.\nESC = cancelar",
  "Şu an bir GIF oynuyor": "Ahora se está reproduciendo un GIF",

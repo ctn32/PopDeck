@@ -117,7 +117,7 @@
  "Öğe bulunamadı": "Element nicht gefunden",
  "özel tuşlar": "Spezialtasten",
  "İptal": "Abbrechen",
- "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: firewall_ac.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Freigabe konnte nicht hinzugefügt werden (evtl. 'Nein' geklickt).\n\nAlternative: firewall_ac.bat rechtsklicken → 'Als Administrator ausführen'.",
+ "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: open_firewall.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Freigabe konnte nicht hinzugefügt werden (evtl. 'Nein' geklickt).\n\nAlternative: open_firewall.bat rechtsklicken → 'Als Administrator ausführen'.",
  "İzin eksikse açılışta otomatik iste": "Beim Start automatisch nachfragen, wenn die Freigabe fehlt",
  "Şimdi atamak istediğin tuşa (ya da CTRL+G gibi bir kombinasyona) bas.\nESC = iptal": "Drücke jetzt die gewünschte Taste (oder eine Kombination wie STRG+G).\nESC = Abbrechen",
  "Şu an bir GIF oynuyor": "Gerade läuft ein GIF",

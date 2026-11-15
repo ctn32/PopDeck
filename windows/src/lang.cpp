@@ -27,11 +27,11 @@ void lang_load(const fs::path& exe_dir) {
     const Embedded* e = embedded_list(n);
     for (size_t i = 0; i < n; i++) {                       // once gomulu
         std::string name = e[i].name;
-        if (starts_with(name, "diller/") && ends_with(name, ".json"))
-            ingest(name.substr(7, name.size() - 12), std::string((const char*)e[i].data, e[i].size));
+        if (starts_with(name, "lang/") && ends_with(name, ".json"))
+            ingest(name.substr(5, name.size() - 10), std::string((const char*)e[i].data, e[i].size));
     }
     std::error_code ec;                                    // sonra exe yanindaki (ustune yazar)
-    fs::path d = exe_dir / "diller";
+    fs::path d = exe_dir / "lang";
     if (fs::is_directory(d, ec)) {
         for (auto& ent : fs::directory_iterator(d, ec)) {
             std::string f = path_str(ent.path().filename());

@@ -1,0 +1,5 @@
+Put your .gif / .png files here (and optionally .mp3 / .wav sounds).
+To play a sound with an image, give it the SAME NAME: funny.gif + funny.mp3
+
+Bu klasore .gif / .png (ve istersen .mp3 / .wav) dosyalarini at.
+Sesi olan gorselle AYNI ISIMDE ses koy: komik.gif + komik.mp3

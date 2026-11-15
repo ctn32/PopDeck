@@ -126,8 +126,8 @@ void MainWindow::ilk_kurulum() {
     std::error_code ec;
     fs::create_directories(g_main_dir, ec);
     if (!fs::exists(settings_path(), ec) && klasor_listesi().empty()) {
-        fs::create_directories(g_main_dir / "Genel", ec);
-        core.ayar.tus_koy("Genel", "f9");
+        fs::create_directories(g_main_dir / "General", ec);
+        core.ayar.tus_koy("General", "f9");
         core.ayar.kaydet();
     }
     core.ayar.yukle();

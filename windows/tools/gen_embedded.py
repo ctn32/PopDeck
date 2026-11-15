@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# Derleme oncesi bir kez calistirilir (zaten calistirilmis halde gelir): diller/*.json + web.html -> src/embedded_data.cpp
+# Derleme oncesi bir kez calistirilir (zaten calistirilmis halde gelir): lang/*.json + web.html -> src/embedded_data.cpp
 import os, sys
 kok = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dosyalar = []
-for f in sorted(os.listdir(os.path.join(kok, "diller"))):
+for f in sorted(os.listdir(os.path.join(kok, "lang"))):
     if f.endswith(".json"):
-        dosyalar.append(("diller/" + f, os.path.join(kok, "diller", f)))
+        dosyalar.append(("lang/" + f, os.path.join(kok, "lang", f)))
 dosyalar.append(("web.html", os.path.join(kok, "src", "web.html")))
 out = ['// OTOMATIK URETILDI (tools/gen_embedded.py) - elle duzenleme', '#include "embedded.hpp"', '']
 tablo = []

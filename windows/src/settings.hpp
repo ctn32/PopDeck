@@ -1,4 +1,4 @@
-// Ayarlar (main/ayarlar.json) - Python surumuyle ayni dosya bicimi
+// Ayarlar (main/settings.json) - Python surumuyle ayni dosya bicimi
 #pragma once
 #include "util.hpp"
 #include <utility>

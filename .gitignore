@@ -1,4 +1,4 @@
-# Derleme ciktilari
+# Build outputs
 build/
 dist/
 *.exe
@@ -16,10 +16,10 @@ local.properties
 *.aab
 *.iml
 
-# Kullanici verileri (her kullanicida farkli)
+# User data (differs per user)
 **/main/*
-!**/main/Genel/
-**/main/Genel/*
-!**/main/Genel/BURAYA_DOSYA_ATIN.txt
+!**/main/General/
+**/main/General/*
+!**/main/General/PUT_FILES_HERE.txt
 popdeck_log.txt
-diller/_eksik.json
+lang/_missing.json

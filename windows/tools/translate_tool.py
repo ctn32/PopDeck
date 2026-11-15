@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-PopDeck ceviri araci - ceviri dosyalarini (diller/*.json) program koduyla esler.
+PopDeck ceviri araci - ceviri dosyalarini (lang/*.json) program koduyla esler.
 
-  python ceviri_araci.py kontrol   -> Hangi dilde hangi cumleler eksik / kullanilmiyor
-  python ceviri_araci.py sablon    -> diller/_eksik.json olusturur (sadece eksik cumleler; doldurulacak yerler "")
-  python ceviri_araci.py ekle      -> _eksik.json'daki DOLU cevirileri dil dosyalarina isler
-  python ceviri_araci.py temizle   -> Kullanilmayan cumleleri dil dosyalarindan siler
+  python translate_tool.py check   -> Hangi dilde hangi cumleler eksik / kullanilmiyor
+  python translate_tool.py template    -> lang/_missing.json olusturur (sadece eksik cumleler; doldurulacak yerler "")
+  python translate_tool.py merge      -> _missing.json'daki DOLU cevirileri dil dosyalarina isler
+  python translate_tool.py clean   -> Kullanilmayan cumleleri dil dosyalarindan siler
 
 Boylece yeni bir ozellik eklenince sadece YENI cumleler cevrilir; tum dil dosyalari yeniden yazilmaz.
 """
@@ -18,7 +18,7 @@ import sys
 KLASOR = os.path.dirname(os.path.abspath(__file__))
 if os.path.basename(KLASOR) == "tools":
     KLASOR = os.path.dirname(KLASOR)
-DILLER = os.path.join(KLASOR, "diller")
+DILLER = os.path.join(KLASOR, "lang")
 SRC = os.path.join(KLASOR, "src")
 
 
@@ -60,23 +60,23 @@ def yaz(kod, veri):
 
 
 def main():
-    komut = sys.argv[1] if len(sys.argv) > 1 else "kontrol"
+    komut = sys.argv[1] if len(sys.argv) > 1 else "check"
     kul, dil = kullanilan(), dosyalar()
     eksik = {k: sorted(x for x in kul if not d.get(x)) for k, d in dil.items()}
-    if komut == "kontrol":
+    if komut == "check":
         for k, d in dil.items():
             fazla = [x for x in d if x != "_ad" and x not in kul]
             print(f"{k}: {len(kul) - len(eksik[k])}/{len(kul)} ceviri tamam | eksik: {len(eksik[k])} | kullanilmayan: {len(fazla)}")
             for x in eksik[k][:8]:
                 print("    EKSIK:", repr(x))
-    elif komut == "sablon":
+    elif komut == "template":
         tum = sorted({x for e in eksik.values() for x in e})
         sablon = {x: {k: dil[k].get(x, "") for k in dil} for x in tum}
-        with open(os.path.join(DILLER, "_eksik.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(DILLER, "_missing.json"), "w", encoding="utf-8") as f:
             json.dump(sablon, f, ensure_ascii=False, indent=1)
-        print(f"{len(tum)} eksik cumle -> diller/_eksik.json (bos \"\" olanlari doldurup 'ekle' calistir)")
-    elif komut == "ekle":
-        yol = os.path.join(DILLER, "_eksik.json")
+        print(f"{len(tum)} eksik cumle -> lang/_missing.json (bos \"\" olanlari doldurup 'merge' calistir)")
+    elif komut == "merge":
+        yol = os.path.join(DILLER, "_missing.json")
         with open(yol, encoding="utf-8") as f:
             sablon = json.load(f)
         eklenen = 0
@@ -94,7 +94,7 @@ def main():
         else:
             os.remove(yol)
         print(f"{eklenen} ceviri eklendi; hala eksik olan cumle: {len(kalan)}")
-    elif komut == "temizle":
+    elif komut == "clean":
         for k, d in dil.items():
             silinecek = [x for x in d if x != "_ad" and x not in kul]
             for x in silinecek:

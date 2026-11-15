@@ -117,7 +117,7 @@
  "Öğe bulunamadı": "Item not found",
  "özel tuşlar": "special keys",
  "İptal": "Cancel",
- "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: firewall_ac.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Permission could not be added (you may have clicked No on the prompt).\n\nAlternative: right-click firewall_ac.bat → 'Run as administrator'.",
+ "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: open_firewall.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Permission could not be added (you may have clicked No on the prompt).\n\nAlternative: right-click open_firewall.bat → 'Run as administrator'.",
  "İzin eksikse açılışta otomatik iste": "Ask automatically at startup if permission is missing",
  "Şimdi atamak istediğin tuşa (ya da CTRL+G gibi bir kombinasyona) bas.\nESC = iptal": "Now press the key (or a combination like CTRL+G) you want to assign.\nESC = cancel",
  "Şu an bir GIF oynuyor": "A GIF is playing right now",

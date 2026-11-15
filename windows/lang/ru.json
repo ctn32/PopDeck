@@ -117,7 +117,7 @@
  "Öğe bulunamadı": "Элемент не найден",
  "özel tuşlar": "особых клавиш",
  "İptal": "Отмена",
- "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: firewall_ac.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Не удалось добавить разрешение (возможно, вы нажали «Нет»).\n\nВариант: правый клик на firewall_ac.bat → «Запуск от имени администратора».",
+ "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: open_firewall.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Не удалось добавить разрешение (возможно, вы нажали «Нет»).\n\nВариант: правый клик на open_firewall.bat → «Запуск от имени администратора».",
  "İzin eksikse açılışta otomatik iste": "Спрашивать при запуске, если разрешения нет",
  "Şimdi atamak istediğin tuşa (ya da CTRL+G gibi bir kombinasyona) bas.\nESC = iptal": "Нажмите клавишу (или сочетание, например CTRL+G), которую хотите назначить.\nESC = отмена",
  "Şu an bir GIF oynuyor": "Сейчас воспроизводится GIF",

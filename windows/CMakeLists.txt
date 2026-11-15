@@ -11,8 +11,8 @@ else()
   add_compile_options(-Wall -Wextra -Wno-unused-parameter)
 endif()
 set(SRC
-  src/main.cpp src/app_ui.cpp src/app_logic.cpp src/ui.cpp src/player.cpp src/oynatici.cpp src/hotkeys.cpp
-  src/wsys.cpp src/win_codec.cpp src/util.cpp src/lang.cpp src/settings.cpp src/files.cpp src/deck.cpp src/keys.cpp
+  src/main.cpp src/app_ui.cpp src/app_logic.cpp src/ui.cpp src/player.cpp src/playback.cpp src/hotkeys.cpp
+  src/winsys.cpp src/win_codec.cpp src/util.cpp src/lang.cpp src/settings.cpp src/files.cpp src/deck.cpp src/keys.cpp
   src/gif.cpp src/scale.cpp src/image.cpp src/qr.cpp src/http.cpp src/upload.cpp src/web.cpp src/netinfo.cpp
   src/embedded_data.cpp)
 if(MSVC)
@@ -29,7 +29,7 @@ target_link_libraries(PopDeck PRIVATE gdiplus gdi32 user32 kernel32 comdlg32 com
 if(NOT MSVC)
   target_link_options(PopDeck PRIVATE -static -static-libgcc -static-libstdc++ -mwindows)
 endif()
-# diller/ ve main/ klasorlerini exe'nin yanina kopyala
+# lang/ ve main/ klasorlerini exe'nin yanina kopyala
 add_custom_command(TARGET PopDeck POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/diller $<TARGET_FILE_DIR:PopDeck>/diller
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/lang $<TARGET_FILE_DIR:PopDeck>/lang
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/main $<TARGET_FILE_DIR:PopDeck>/main)

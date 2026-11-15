@@ -117,7 +117,7 @@
  "Öğe bulunamadı": "Élément introuvable",
  "özel tuşlar": "les touches spéciales",
  "İptal": "Annuler",
- "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: firewall_ac.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Autorisation non ajoutée (tu as peut-être cliqué sur Non).\n\nAlternative : clic droit sur firewall_ac.bat → 'Exécuter en tant qu'administrateur'.",
+ "İzin eklenemedi (onay penceresine Evet demedin olabilir).\n\nAlternatif: open_firewall.bat dosyasına sağ tıkla → 'Yönetici olarak çalıştır'.": "Autorisation non ajoutée (tu as peut-être cliqué sur Non).\n\nAlternative : clic droit sur open_firewall.bat → 'Exécuter en tant qu'administrateur'.",
  "İzin eksikse açılışta otomatik iste": "Demander automatiquement au démarrage si l'autorisation manque",
  "Şimdi atamak istediğin tuşa (ya da CTRL+G gibi bir kombinasyona) bas.\nESC = iptal": "Appuie maintenant sur la touche (ou une combinaison comme CTRL+G) à attribuer.\nÉCHAP = annuler",
  "Şu an bir GIF oynuyor": "Un GIF est en cours de lecture",

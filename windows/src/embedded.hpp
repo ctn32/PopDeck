@@ -1,4 +1,4 @@
-// Derleme oncesi tools/gen_embedded.py ile uretilen gomulu dosyalar (diller/*.json, web.html)
+// Derleme oncesi tools/gen_embedded.py ile uretilen gomulu dosyalar (lang/*.json, web.html)
 #pragma once
 #include <cstddef>
 struct Embedded { const char* name; const unsigned char* data; size_t size; };

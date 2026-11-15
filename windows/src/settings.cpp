@@ -3,7 +3,16 @@
 #include "files.hpp"
 
 fs::path g_main_dir;
-fs::path settings_path() { return g_main_dir / "ayarlar.json"; }
+fs::path settings_path() {
+    static bool migrated = false;                       // eski ayarlar.json -> settings.json (bir kez)
+    if (!migrated) {
+        migrated = true;
+        std::error_code ec;
+        fs::path nw = g_main_dir / "settings.json", old = g_main_dir / "ayarlar.json";
+        if (!fs::exists(nw, ec) && fs::exists(old, ec)) fs::rename(old, nw, ec);
+    }
+    return g_main_dir / "settings.json";
+}
 fs::path deck_path() { return g_main_dir / "deck.json"; }
 
 static int ival(const Json& v, int d) { return v.is_num() ? (int)v.n : (v.is_bool() ? (int)v.b : d); }
