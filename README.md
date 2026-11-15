@@ -7,7 +7,7 @@ Press a key (or tap your phone) and a random GIF pops up full-screen on your PC,
 |---|---|
 | [`windows/`](windows) | **Main app**, written in C++ (Win32 + GDI+): global hotkeys, click-through transparent overlay, audio, phone-remote web server, QR code |
 | [`android/`](android) | Android app (WebView wrapper): opens the PC's remote page like a native app and plays the GIFs/sounds on the phone |
-| [`python/`](python) | Original Python/Tkinter version, kept as a fallback (includes the GIF stretch fix) |
+
 
 ## Features
 - **One hotkey per folder.** Press it and a random image from that folder shows up. "Smart random" never repeats the same item back-to-back.
